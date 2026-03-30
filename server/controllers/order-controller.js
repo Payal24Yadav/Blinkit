@@ -149,7 +149,8 @@ export async function paymentController(req, res) {
         addressId: addressId.toString(),
       },
       line_items,
-      success_url: `${process.env.FRONTEND_URL}/success`,
+      // success_url: `${process.env.FRONTEND_URL}/success`,
+      success_url: `${process.env.FRONTEND_URL}/success?status=success`,
       cancel_url: `${process.env.FRONTEND_URL}/cancel`,
     });
 

@@ -7,9 +7,17 @@ import { useEffect } from 'react';
 const Success = () => {
   const location = useLocation();
 
+  const params = new URLSearchParams(location.search);
+const status = params.get("status");
+
    const { fetchCartItem, fetchAddress, fetchOrder } = useGlobalContext();
   // Safely check for the state text, default to "Order placed"
-  const successMessage = location.state?.text || "Order placed";
+ const successMessage =
+  status === "success"
+    ? "Payment Successful"
+    : location.state?.text || "Order placed";
+
+
     useEffect(() => {
     fetchCartItem();   //  cart refresh
     fetchAddress();    //  optional
