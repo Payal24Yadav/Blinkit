@@ -126,7 +126,7 @@ export async function paymentController(req, res) {
           currency: "inr",
           product_data: {
             name: item.productId?.name,
-            images: item.productId?.image,
+           images: [],
             // Metadata yahan product level par hai
             metadata: {
               productId: item.productId?._id.toString(),
