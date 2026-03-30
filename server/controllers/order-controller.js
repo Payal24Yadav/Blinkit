@@ -126,7 +126,7 @@ export async function paymentController(req, res) {
           currency: "inr",
           product_data: {
             name: item.productId?.name,
-           images: [],
+            images: item.productId?.image,
             // Metadata yahan product level par hai
             metadata: {
               productId: item.productId?._id.toString(),
@@ -149,8 +149,8 @@ export async function paymentController(req, res) {
         addressId: addressId.toString(),
       },
       line_items,
-      success_url: `${process.env.CLIENT_URL}/success`,
-      cancel_url: `${process.env.CLIENT_URL}/cancel`,
+      success_url: `${process.env.FRONTEND_URL}/success`,
+      cancel_url: `${process.env.FRONTEND_URL}/cancel`,
     });
 
     console.log("--- PAYMENT SESSION CREATED --- ID:", session.id);
