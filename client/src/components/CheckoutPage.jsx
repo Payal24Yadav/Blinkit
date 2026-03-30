@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 
 const CheckoutPage = () => {
-  const { notDiscountTotalPrice, totalPrice, totalQty, fetchCartItem } =
+  const { notDiscountTotalPrice, totalPrice, totalQty, fetchCartItem, fetchOrder } =
     useGlobalContext();
   const [openAddress, setOpenAddress] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -43,6 +43,9 @@ const CheckoutPage = () => {
         toast.success(responseData.message);
         if (fetchCartItem) {
           fetchCartItem();
+        }
+        if(fetchOrder){
+          fetchOrder()
         }
         navigate("/success", {
           state: {
@@ -88,6 +91,7 @@ const CheckoutPage = () => {
       });
 
       const { data: session } = response;
+      
       console.log("--- 3. Backend Response Received ---", session);
 
       if (!session?.url) {

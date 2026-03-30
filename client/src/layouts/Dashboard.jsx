@@ -15,7 +15,7 @@ const Dashboard = () => {
         <div className="flex flex-col md:flex-row gap-6">
           
           {/* Left Sidebar */}
-          <div className="md:w-64 w-full bg-white shadow-sm rounded-xl border border-stone-200">
+          <div >
             <UserMenu />
           </div>
 

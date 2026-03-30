@@ -53,7 +53,6 @@ const Login = () => {
         });
         navigate("/");
       }
-      console.log("Login Data:", response);
     } catch (error) {
       AxiosToastError(error);
     }

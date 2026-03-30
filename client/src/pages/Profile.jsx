@@ -169,7 +169,7 @@ const Profile = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-fit px-10 py-3 bg-amber-500 text-white font-black rounded-xl hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20 active:scale-95 disabled:opacity-60"
+            className="w-fit px-8 py-3 mt-8 bg-amber-500 text-white font-black rounded-xl hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20 active:scale-95 disabled:opacity-60"
           >
             {loading ? "Saving..." : "Save Profile"}
           </button>

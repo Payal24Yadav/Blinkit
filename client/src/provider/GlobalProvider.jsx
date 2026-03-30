@@ -7,18 +7,19 @@ import AxiosToastError from "../utils/AxiosToastError";
 import toast from "react-hot-toast";
 import { pricewithDiscount } from "../utils/PriceWithDiscount"; // Import this!
 import { handleAddAddress } from "../store/addressSlice";
+import { setOrder } from "../store/orderSlice";
 
 export const GlobalContext = createContext(null);
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
   const dispatch = useDispatch();
-    const [totalPrice, setTotalPrice] = useState(0);
-    const [totalQty, setTotalQty] = useState(0);
-     const cartItem = useSelector((state) => state.cartItem.cart) || [];
-  const [notDiscountTotalPrice, setNotDiscountTotalPrice] = useState(0)
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalQty, setTotalQty] = useState(0);
+  const cartItem = useSelector((state) => state.cartItem.cart) || [];
+  const [notDiscountTotalPrice, setNotDiscountTotalPrice] = useState(0);
 
-  const user = useSelector(state=> state?.user)
+  const user = useSelector((state) => state?.user);
 
   const fetchCartItem = async () => {
     try {
@@ -50,11 +51,11 @@ const GlobalProvider = ({ children }) => {
       if (responseData.success) {
         // toast.success(responseData.message);
         fetchCartItem();
-        return responseData
+        return responseData;
       }
     } catch (error) {
       AxiosToastError(error);
-      return error
+      return error;
     }
   };
 
@@ -76,70 +77,79 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
-  const fetchAddress = async ()=>{
-    try{
+  const fetchAddress = async () => {
+    try {
       const response = await Axios({
-        ...SummaryApi.getAddress
-      })
-      const {data:responseData}= response
-      if(responseData.success){
-        dispatch(handleAddAddress(responseData.data))
+        ...SummaryApi.getAddress,
+      });
+      const { data: responseData } = response;
+      if (responseData.success) {
+        dispatch(handleAddAddress(responseData.data));
       }
-    } catch(error){
-      AxiosToastError(error)
+    } catch (error) {
+      AxiosToastError(error);
     }
-  }
+  };
+
+  const fetchOrder = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.getOrderItems,
+      });
+      const { data: responseData } = response;
+      if (responseData.success) {
+        dispatch(setOrder(responseData.data));
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    }
+  };
 
   // Sync Price and Qty (With Discount Logic)
   useEffect(() => {
-  const qty = cartItem.reduce((prev, curr) => {
-    return prev + (Number(curr?.quantity) || 0);
-  }, 0);
+    const qty = cartItem.reduce((prev, curr) => {
+      return prev + (Number(curr?.quantity) || 0);
+    }, 0);
 
-  const price = cartItem.reduce((prev, curr) => {
-    const price = Number(curr?.productId?.price) || 0;
-    const discount = Number(curr?.productId?.discount) || 0;
-    const quantity = Number(curr?.quantity) || 0;
+    const price = cartItem.reduce((prev, curr) => {
+      const price = Number(curr?.productId?.price) || 0;
+      const discount = Number(curr?.productId?.discount) || 0;
+      const quantity = Number(curr?.quantity) || 0;
 
-    const actualPrice = Number(pricewithDiscount(price, discount)) || 0;
+      const actualPrice = Number(pricewithDiscount(price, discount)) || 0;
 
-    return prev + (actualPrice * quantity);
-  }, 0);
+      return prev + actualPrice * quantity;
+    }, 0);
 
-  const notDiscountPrice = cartItem.reduce((prev, curr) => {
-    const price = Number(curr?.productId?.price) || 0;
-    const quantity = Number(curr?.quantity) || 0;
+    const notDiscountPrice = cartItem.reduce((prev, curr) => {
+      const price = Number(curr?.productId?.price) || 0;
+      const quantity = Number(curr?.quantity) || 0;
 
-    return prev + (price * quantity);
-  }, 0);
+      return prev + price * quantity;
+    }, 0);
 
-  setTotalQty(qty);
-  setTotalPrice(price);
-  setNotDiscountTotalPrice(notDiscountPrice);
+    setTotalQty(qty);
+    setTotalPrice(price);
+    setNotDiscountTotalPrice(notDiscountPrice);
+  }, [cartItem]);
 
-}, [cartItem]);
-  
-
-  
-
-
-//   useEffect(() => {
-//   if (user?._id) {
-//     fetchCartItem(); // login ke baad cart load
-//   } else {
-//     dispatch(handleAddItemCart([])); // logout pe clear
-//   }
-// }, [user]);
-useEffect(() => {
-  if (user?._id) {
-    fetchCartItem();
-    fetchAddress();
-  } else {
-    dispatch(handleAddItemCart([]));
-    dispatch(handleAddAddress([]));
-  }
-}, [user?._id]);   // 👈 ONLY THIS
-
+  //   useEffect(() => {
+  //   if (user?._id) {
+  //     fetchCartItem(); // login ke baad cart load
+  //   } else {
+  //     dispatch(handleAddItemCart([])); // logout pe clear
+  //   }
+  // }, [user]);
+  useEffect(() => {
+    if (user?._id) {
+      fetchCartItem();
+      fetchAddress();
+      fetchOrder();
+    } else {
+      dispatch(handleAddItemCart([]));
+      dispatch(handleAddAddress([]));
+    }
+  }, [user?._id]); // 👈 ONLY THIS
 
   return (
     <GlobalContext.Provider
@@ -150,7 +160,8 @@ useEffect(() => {
         fetchAddress,
         totalPrice,
         totalQty,
-        notDiscountTotalPrice
+        notDiscountTotalPrice,
+        fetchOrder,
       }}
     >
       {children}

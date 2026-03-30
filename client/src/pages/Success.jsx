@@ -1,12 +1,20 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiCheckCircle } from "react-icons/fi";
+import { useGlobalContext } from '../provider/GlobalProvider';
+import { useEffect } from 'react';
 
 const Success = () => {
   const location = useLocation();
 
+   const { fetchCartItem, fetchAddress, fetchOrder } = useGlobalContext();
   // Safely check for the state text, default to "Order placed"
   const successMessage = location.state?.text || "Order placed";
+    useEffect(() => {
+    fetchCartItem();   //  cart refresh
+    fetchAddress();    //  optional
+    fetchOrder();      //  optional
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center">

@@ -22,7 +22,7 @@ const SearchPage = () => {
       const response = await Axios({
         ...SummaryApi.searchProduct,
         data: {
-          search: searchText || "", // ✅ Dynamic search text
+          search: searchText || "", // Dynamic search text
           page: page
         }
       })
@@ -44,7 +44,7 @@ const SearchPage = () => {
     }
   }
 
-  // ✅ Jab bhi search text badle, page 1 kar do aur naya data lao
+  //  Jab bhi search text badle, page 1 kar do aur naya data lao
   useEffect(() => {
     setPage(1)
     setData([]) // Clear old data
@@ -54,7 +54,7 @@ const SearchPage = () => {
     fetchData()
   }, [page, searchText])
 
-  // ✅ Infinite Scroll Logic (Optionally use this or a "Load More" button)
+  //  Infinite Scroll Logic (Optionally use this or a "Load More" button)
   const handleScroll = () => {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2 && !loading && page < totalPage) {
         setPage(prev => prev + 1)

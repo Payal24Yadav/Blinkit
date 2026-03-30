@@ -31,7 +31,6 @@ const EditCategory = ({close, fetchData, data:CategoryData}) => {
                 image:ImageResponse.data.url
             }
         })
-        console.log(response);
         
     };
 

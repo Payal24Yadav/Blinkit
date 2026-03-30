@@ -148,6 +148,10 @@ const SummaryApi = {
   payment_url:{
     url:"/api/order/checkout",
     method:"post"
+  },
+  getOrderItems:{
+    url:"/api/order/order-list",
+    method:"get"
   }
 };
 
